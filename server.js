@@ -15,6 +15,9 @@ const app = express(); //app se server bnega
 
 //import database connection object
 const db = require("./db");
+require('dotenv').config()
+const PORT= process.env.PORT || 3000;
+
 
 //import person model through which all db operations and connectivity is performed
 const Person = require("./models/Person");
@@ -154,7 +157,8 @@ app.get('/person/:workType', async(req,res)=>{     //parameterized api call
 
 */
 
-app.listen(3000, () => {
+
+app.listen(PORT, () => {
   console.log("server is running on port 3000");
 });
   
