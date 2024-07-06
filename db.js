@@ -15,6 +15,10 @@ const mongoURL= process.env.MONGODB_URL;
 mongoose.connect(mongoURL, {
   useNewUrlParser: true,  //these are mandatory parameters to pass for establishing connection . 
   useUnifiedTopology: true, 
+  sslValidate: true,
+  sslCA: '/path/to/ca.pem',
+  sslCert: '/path/to/client-cert.pem',
+  sslKey: '/path/to/client-key.pem'
 });
 
 //default connection
