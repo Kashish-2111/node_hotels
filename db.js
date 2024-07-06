@@ -18,7 +18,8 @@ mongoose.connect(mongoURL, {
   sslValidate: true,
   sslCA: '/path/to/ca.pem',
   sslCert: '/path/to/client-cert.pem',
-  sslKey: '/path/to/client-key.pem'
+  sslKey: '/path/to/client-key.pem',
+  loggerLevel: 'debug'
 });
 
 //default connection
