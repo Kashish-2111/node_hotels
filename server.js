@@ -15,9 +15,9 @@ const app = express(); //app se server bnega
 
 //import database connection object
 const db = require("./db");
-require('dotenv').config()
-const PORT= process.env.PORT || 3000;
-
+require("dotenv").config();
+const PORT = process.env.PORT || 3000;
+const passport = require("./Auth");
 
 //import person model through which all db operations and connectivity is performed
 const Person = require("./models/Person");
@@ -26,20 +26,21 @@ const menuItem = require("./models/Menu");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json()); //to parse json data and store it in req.body for further use
 
+//middleware function
+const logRequest = (req, res, next) => {
+  console.log(
+    `[${new Date().toLocaleString()}] Request made to: ${req.originalUrl}`
+  );
+  next(); //move to the next phase
+};
+
+app.use(logRequest);
+
+app.use(passport.initialize()); //to initialize passport(middleware)
+const localAuthMiddleware = passport.authenticate("local", { session: false });
+
 app.get("/", function (req, res) {
   res.send("Hello World...How can i help you?");
-});
-app.get("/pizza", function (req, res) {
-  res.send("sure sir,i would love to serve you pizza");
-});
-app.get("/idli", function (req, res) {
-  var customised_idli = {
-    name: "rava idli",
-    size: "10 cm diameter",
-    is_sambhar: true,
-    is_chutney: false,
-  };
-  res.send(customised_idli);
 });
 
 /* app.post('/items', async(req,res)=>{
@@ -71,14 +72,13 @@ app.get('/items', async(req,res)=>{
   }
 }) */
 
-//importing router files 
+//importing router files
 
-const personRoutes= require('./routes/personRoutes')
-const menuRoutes=require('./routes/menuRoutes')
+const personRoutes = require("./routes/personRoutes");
+const menuRoutes = require("./routes/menuRoutes");
 //use the routers
-app.use('/person',personRoutes);
-app.use('/items',menuRoutes);
-
+app.use("/person", localAuthMiddleware, personRoutes);
+app.use("/items", menuRoutes);
 
 /* app.post("/person", async (req, res) => {
   // const data = req.body //assume request body contains person data
@@ -157,11 +157,9 @@ app.get('/person/:workType', async(req,res)=>{     //parameterized api call
 
 */
 
-
 app.listen(PORT, () => {
   console.log("server is running on port 3000");
 });
-  
 
 /* crud operations and their http methods 
 create - put (save)
@@ -170,4 +168,3 @@ update - patch/put
 delete - delete
 jab /method hit hoga post ke through toh kya hoga.....
 */
-
