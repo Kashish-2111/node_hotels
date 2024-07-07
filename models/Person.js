@@ -63,6 +63,7 @@ personSchema.methods.comparePassword = async function (candidatePassword) {
   try {
     //use bcrypt to compare the provided password with the hashed password
     const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    //override the plain text with hash
     return isMatch;
   } catch (err) {
     throw err;
